@@ -9,6 +9,8 @@
 
 // I AM NOT DONE
 
+use std::thread::sleep;
+
 #[derive(Debug)]
 struct Package {
     sender_country: String,
@@ -29,12 +31,13 @@ impl Package {
         }
     }
 
-    fn is_international(&self) -> ??? {
-        // Something goes here...
+    fn is_international(&self) -> bool {
+        let is_eq = self.sender_country == self.recipient_country;
+        !is_eq
     }
 
-    fn get_fees(&self, cents_per_gram: i32) -> ??? {
-        // Something goes here...
+    fn get_fees(&self, cents_per_gram: i32) -> i32 {
+        self.weight_in_grams * cents_per_gram
     }
 }
 
@@ -57,7 +60,7 @@ mod tests {
         let recipient_country = String::from("Russia");
 
         let package = Package::new(sender_country, recipient_country, 1200);
-
+        let res = package.is_international();
         assert!(package.is_international());
     }
 

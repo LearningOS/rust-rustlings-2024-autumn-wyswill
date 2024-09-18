@@ -35,7 +35,6 @@ mod tests {
     #[test]
     fn your_order() {
         let order_template = create_order_template();
-        // TODO: Create your own order using the update syntax and template above!
 
         let mut your_order = create_order_template();
         your_order.name = String::from("Hacker in Rust");
