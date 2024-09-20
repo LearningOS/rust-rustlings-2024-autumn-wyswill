@@ -31,9 +31,9 @@ fn main() {
     let mut joinhandles = Vec::new();
 
     for offset in 0..8 {
-        let child_numbers = Arc::new(vec![0..10]);
+        let child_numbers: Vec<u32> = (0..99).collect();
         joinhandles.push(thread::spawn(move || {
-            let sum: u32 = child_numbers.clone().iter().filter(|&&n| n % 8 == offset).sum();
+            let sum: u32 = child_numbers.iter().filter(|&&n| n % 8 == offset).sum();
             println!("Sum of offset {} is {}", offset, sum);
         }));
     }

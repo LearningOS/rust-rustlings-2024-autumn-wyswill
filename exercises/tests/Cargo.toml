@@ -1,5 +1,5 @@
 [package]
-name = "tests8"
+name = "tests7"
 version = "0.0.1"
 edition = "2021"
 [[bin]]

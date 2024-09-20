@@ -31,27 +31,44 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
-
-// Steps:
-// 1. If the length of the provided string is 0, an error should be returned
-// 2. Split the given string on the commas present in it
-// 3. Only 2 elements should be returned from the split, otherwise return an
-//    error
-// 4. Extract the first element from the split operation and use it as the name
-// 5. Extract the other element from the split operation and parse it into a
-//    `usize` as the age with something like `"4".parse::<usize>()`
-// 6. If while extracting the name and the age something goes wrong, an error
-//    should be returned
-// If everything goes well, then return a Result of a Person object
+//步骤:
+// 1。如果提供的字符串长度为0，则应返回错误
+// 2。分割给定字符串中的逗号
+// 3。拆分只能返回2个元素，否则返回1
+//错误
+// 4。从拆分操作中提取第一个元素并将其用作名称
+// 5。从拆分操作中提取另一个元素并将其解析为
+// ' usize '作为年龄，类似' "4".parse::<usize>() '
+// 6。如果在提取姓名和年龄时出了问题，就会出现错误
+//应该返回
+//如果一切正常，则返回Person对象的Result
 //
-// As an aside: `Box<dyn Error>` implements `From<&'_ str>`. This means that if
-// you want to return a string error message, you can do so via just using
-// return `Err("my error message".into())`.
+//作为题外话:' Box<dyn Error> '实现' From<&'_ str> '。这意味着如果
+//如果你想返回一个字符串错误消息，你可以使用
+//返回' Err("my error message".into()) '。
 
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s == "" { return Err(ParsePersonError::Empty); }
+        let mut p = Person { name: String::new(), age: 0 };
+        let parts: Vec<&str> = s.split(",").collect();
+        if parts.len() != 2 { return Err(ParsePersonError::BadLen); }
+
+        let name = parts.get(0).unwrap().to_string();
+        let age = parts.get(1).unwrap().to_string();
+        if name == "" { return Err(ParsePersonError::NoName); }
+
+        match age.parse::<usize>() {
+            Ok(v_age) => {
+                p.age = v_age;
+            }
+            Err(err) => {
+                return Err(ParsePersonError::ParseInt(err))
+            }
+        }
+        p.name = name;
+        Ok(p)
     }
 }
 
