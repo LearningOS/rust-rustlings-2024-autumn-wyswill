@@ -3,5 +3,5 @@ name = "tests7"
 version = "0.0.1"
 edition = "2021"
 [[bin]]
-name = "tests8"
-path = "tests8.rs"
+name = "tests9"
+path = "tests9.rs"
