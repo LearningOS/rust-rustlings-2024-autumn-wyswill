@@ -34,8 +34,17 @@ extern "Rust" {
 
 mod Foo {
     // No `extern` equals `extern "Rust"`.
-    fn my_demo_function(a: u32) -> u32 {
+    // 实现外部声明的函数
+    #[no_mangle]
+    pub extern "Rust" fn my_demo_function(a: u32) -> u32 {
         a
+    }
+
+    // 为 my_demo_function_alias 创建一个别名
+    #[no_mangle]
+    pub extern "Rust" fn my_demo_function_alias(a: u32) -> u32 {
+        // 直接调用 my_demo_function
+        my_demo_function(a)
     }
 }
 
