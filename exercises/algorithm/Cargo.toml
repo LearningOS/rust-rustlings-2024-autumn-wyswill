@@ -3,5 +3,5 @@ name = "algorithm"
 version = "0.0.1"
 edition = "2021"
 [[bin]]
-name = "algorithm8"
-path = "algorithm8.rs"
+name = "algorithm1"
+path = "algorithm1.rs"

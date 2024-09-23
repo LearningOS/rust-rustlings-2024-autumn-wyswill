@@ -36,7 +36,8 @@ where
     }
 
     pub fn add(&mut self, value: T) {
-        //TODO
+        self.count += 1;
+        self.items.push(value);
     }
 
     fn parent_idx(&self, idx: usize) -> usize {
@@ -57,7 +58,7 @@ where
 
     fn smallest_child_idx(&self, idx: usize) -> usize {
         //TODO
-		0
+        0
     }
 }
 
@@ -83,8 +84,8 @@ where
     type Item = T;
 
     fn next(&mut self) -> Option<T> {
-        //TODO
-		None
+        self.count -= 1;
+        self.items.pop()
     }
 }
 
@@ -151,3 +152,5 @@ mod tests {
         assert_eq!(heap.next(), Some(2));
     }
 }
+
+fn main() {}

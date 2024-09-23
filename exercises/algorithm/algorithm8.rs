@@ -67,15 +67,19 @@ impl<T> myStack<T> {
         self.q1.enqueue(elem);
     }
     pub fn pop(&mut self) -> Result<T, &str> {
-        if self.q1.is_empty() { return Err("is empty"); }
+        if self.q1.is_empty() { return Err("Stack is empty"); }
 
         while self.q1.elements.len() > 1 {
             if let Ok(front) = self.q1.dequeue() {
                 self.q2.enqueue(front);
             }
         }
-        let popped_element = self.q1.dequeue()?;
-        std::mem::swap(&mut self.q1.elements, &mut self.q2.elements);
+        let popped_element = self.q1.dequeue().expect("asdf");
+        while self.q2.elements.len() > 0 {
+            if let Ok(front) = self.q2.dequeue() {
+                self.q1.enqueue(front);
+            }
+        }
         Ok(popped_element)
     }
     pub fn is_empty(&self) -> bool {

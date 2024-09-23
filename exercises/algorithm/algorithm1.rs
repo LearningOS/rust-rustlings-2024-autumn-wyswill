@@ -2,10 +2,8 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-use std::cmp::min;
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
-use std::vec::*;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -77,12 +75,17 @@ impl<T> LinkedList<T> {
         };
 
         let mut index = 0;
-        let mut tmp_list_a = list_a;
-        let mut tmp_list_b = list_b;
-        loop {
-            if let Some(tmp_a) = tmp_list_a.start.take() {}
-            if let Some(tmp_b) = tmp_list_b.start.take() {}
-
+        let mut tmp_list_a = list_a.start;
+        let mut tmp_list_b = list_b.start;
+        while tmp_list_a.is_some(){
+            unsafe {
+                let t_a= (*tmp_list_a.unwrap().as_ptr());
+                let t_b=  (*tmp_list_b.unwrap().as_ptr());
+                res_list.add(t_a.val);
+                res_list.add(t_b.val);
+                tmp_list_a = t_a.next;
+                tmp_list_b = t_b.next;
+            }
             index += 1;
         }
 
