@@ -3,6 +3,7 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
+use std::cmp::Ordering;
 use std::fmt::Debug;
 
 
@@ -41,45 +42,26 @@ impl<T> BinarySearchTree<T>
 where
     T: Ord,
 {
+
     fn new() -> Self {
         BinarySearchTree { root: None }
     }
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        self.root = self.insert_recursive(self.root.take(), value);
-    }
-
-    fn insert_recursive(&mut self, node: Option<Box<TreeNode<T>>>, value: T) -> Option<Box<TreeNode<T>>> {
-        match node {
-            None => Some(Box::new(TreeNode::new(value))),
-            Some(mut n) => {
-                if value < n.value {
-                    n.left = self.insert_recursive(n.left.take(), value);
-                } else {
-                    n.right = self.insert_recursive(n.right.take(), value);
-                }
-                Some(n)
-            }
+        //TODO
+        match self.root {
+            Some(ref mut root_node) => root_node.insert(value),
+            None => self.root = Some(Box::new(TreeNode::new(value))),
         }
     }
 
+    // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        self.search_recursive(self.root.as_ref(), value)
-    }
-
-    fn search_recursive(&self, node: Option<&Box<TreeNode<T>>>, value: T) -> bool {
-        match node {
+        //TODO
+        match self.root {
+            Some(ref root_node) => root_node.search(value),
             None => false,
-            Some(n) => {
-                if value == n.value {
-                    true
-                } else if value < n.value {
-                    self.search_recursive(n.left.as_ref(), value)
-                } else {
-                    self.search_recursive(n.right.as_ref(), value)
-                }
-            }
         }
     }
 }
@@ -91,6 +73,29 @@ where
     // Insert a node into the tree
     fn insert(&mut self, value: T) {
         //TODO
+        match value.cmp(&self.value) {
+            Ordering::Equal => {},
+            Ordering::Less => {
+                match self.left {
+                    Some(ref mut left_node) => left_node.insert(value),
+                    None => self.left = Some(Box::new(TreeNode::new(value))),
+                }
+            },
+            Ordering::Greater => {
+                match self.right {
+                    Some(ref mut right_node) => right_node.insert(value),
+                    None => self.right = Some(Box::new(TreeNode::new(value))),
+                }
+            }
+        }
+    }
+
+    fn search(&self, value: T) -> bool {
+        match value.cmp(&self.value) {
+            Ordering::Equal => true,
+            Ordering::Less => self.left.as_ref().map_or(false, |left_node| left_node.search(value)),
+            Ordering::Greater => self.right.as_ref().map_or(false, |right_node| right_node.search(value)),
+        }
     }
 }
 
@@ -112,7 +117,7 @@ mod tests {
         bst.insert(7);
         bst.insert(2);
         bst.insert(4);
-
+        println!("Tree: {:?}", bst);
 
         assert_eq!(bst.search(5), true);
         assert_eq!(bst.search(3), true);
@@ -141,10 +146,8 @@ mod tests {
             Some(ref node) => {
                 assert!(node.left.is_none());
                 assert!(node.right.is_none());
-            }
+            },
             None => panic!("Root should not be None after insertion"),
         }
     }
 }
-
-fn main() {}

@@ -12,6 +12,7 @@ impl fmt::Display for NodeNotInGraph {
         write!(f, "accessing a node that is not in the graph")
     }
 }
+#[derive(Debug)]
 pub struct UndirectedGraph {
     adjacency_table: HashMap<String, Vec<(String, i32)>>,
 }
@@ -28,7 +29,15 @@ impl Graph for UndirectedGraph {
         &self.adjacency_table
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
-        //TODO
+        let (a, b, weight) = edge;
+        match self.adjacency_table.get_mut(a) {
+            None => {self.adjacency_table.insert(a.to_owned(), vec![(b.to_owned(), weight)]);},
+            Some(ref mut adjacency_list) => adjacency_list.push((b.to_string(), weight)),
+        }
+        match self.adjacency_table.get_mut(b) {
+            None => {self.adjacency_table.insert(b.to_owned(), vec![(a.to_owned(), weight)]);},
+            Some(ref mut adjacency_list) => adjacency_list.push((a.to_string(), weight)),
+        }
     }
 }
 pub trait Graph {
@@ -37,7 +46,7 @@ pub trait Graph {
     fn adjacency_table(&self) -> &HashMap<String, Vec<(String, i32)>>;
     fn add_node(&mut self, node: &str) -> bool {
         //TODO
-		true
+        true
     }
     fn add_edge(&mut self, edge: (&str, &str, i32)) {
         //TODO
@@ -68,6 +77,7 @@ mod test_undirected_graph {
         graph.add_edge(("a", "b", 5));
         graph.add_edge(("b", "c", 10));
         graph.add_edge(("c", "a", 7));
+        println!("{:?}", graph);
         let expected_edges = [
             (&String::from("a"), &String::from("b"), 5),
             (&String::from("b"), &String::from("a"), 5),
@@ -77,6 +87,7 @@ mod test_undirected_graph {
             (&String::from("c"), &String::from("b"), 10),
         ];
         for edge in expected_edges.iter() {
+            println!("Checking edge {:?}", edge);
             assert_eq!(graph.edges().contains(edge), true);
         }
     }
